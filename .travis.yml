@@ -1,0 +1,15 @@
+sudo: required
+
+dist: trusty
+
+services:
+  - docker
+
+before_install:
+  - sudo modprobe ip_vs
+  - sudo apt-get -y purge docker-engine
+  - bash <(curl -fsSL https://get.docker.com/)
+  - docker version
+  - docker build -t nanobox/hoarder .
+
+script: sudo test/run_all.sh

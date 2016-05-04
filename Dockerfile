@@ -27,6 +27,21 @@ RUN curl \
       -o /var/nanobox/hoarder.md5 \
       https://s3.amazonaws.com/tools.nanopack.io/hoarder/linux/amd64/hoarder.md5
 
+# Download slurp
+RUN curl \
+      -f \
+      -k \
+      -o /usr/local/bin/slurp \
+      https://s3.amazonaws.com/tools.nanopack.io/slurp/linux/amd64/slurp && \
+    chmod 755 /usr/local/bin/slurp
+
+# Download md5 (used to perform updates in hooks)
+RUN curl \
+      -f \
+      -k \
+      -o /var/nanobox/slurp.md5 \
+      https://s3.amazonaws.com/tools.nanopack.io/slurp/linux/amd64/slurp.md5
+
 # Install hooks
 RUN curl \
       -f \

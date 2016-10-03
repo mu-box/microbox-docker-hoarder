@@ -13,3 +13,16 @@ before_install:
   - docker build -t nanobox/hoarder .
 
 script: sudo test/run_all.sh
+
+after_success:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker build -t ${NAMESPACE}/hoarder .
+  - docker tag ${NAMESPACE}/hoarder ${NAMESPACE}/hoarder:beta;
+  - docker push ${REMOTE}${NAMESPACE}/hoarder:beta;
+  - if [ "$BRANCH" == "master" ]; then
+    docker push ${REMOTE}${NAMESPACE}/hoarder;
+    else
+    docker tag ${NAMESPACE}/hoarder ${NAMESPACE}/hoarder:${BRANCH//\//_};
+    docker push ${REMOTE}${NAMESPACE}/hoarder:${BRANCH//\//_};
+    fi

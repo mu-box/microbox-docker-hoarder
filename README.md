@@ -1,4 +1,4 @@
-## nanobox-docker-hoarder ![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-hoarder.svg)
+## nanobox-docker-hoarder [![Build Status Image](https://travis-ci.org/nanobox-io/nanobox-docker-hoarder.svg)](https://travis-ci.org/nanobox-io/nanobox-docker-hoarder)
 
 This repo contains the files necessary to create the hoarder docker image for [Nanobox](http://nanobox.io) consumption.
 

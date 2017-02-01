@@ -10,6 +10,8 @@ before_install:
   - sudo apt-get -y purge docker-engine
   - bash <(curl -fsSL https://get.docker.com/)
   - docker version
+  - sudo apt-get -y install python-pip
+  - sudo pip install docker-squash
   - docker build -t nanobox/hoarder .
 
 script: sudo test/run_all.sh
@@ -18,11 +20,13 @@ after_success:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - docker build -t ${NAMESPACE}/hoarder .
-  - docker tag ${NAMESPACE}/hoarder ${NAMESPACE}/hoarder:beta;
+  - docker-squash -t ${NAMESPACE}/hoarder:squashed -f nanobox/runit --tmp-dir /var/tmp/squasher ${NAMESPACE}/hoarder
+  - docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder:beta;
   - docker push ${REMOTE}${NAMESPACE}/hoarder:beta;
   - if [ "$BRANCH" == "master" ]; then
+    docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder;
     docker push ${REMOTE}${NAMESPACE}/hoarder;
     else
-    docker tag ${NAMESPACE}/hoarder ${NAMESPACE}/hoarder:${BRANCH//\//_};
+    docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder:${BRANCH//\//_};
     docker push ${REMOTE}${NAMESPACE}/hoarder:${BRANCH//\//_};
     fi

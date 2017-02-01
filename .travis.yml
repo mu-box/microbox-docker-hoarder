@@ -24,6 +24,7 @@ after_success:
   - docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder:beta;
   - docker push ${REMOTE}${NAMESPACE}/hoarder:beta;
   - if [ "$BRANCH" == "master" ]; then
+    docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder;
     docker push ${REMOTE}${NAMESPACE}/hoarder;
     else
     docker tag ${NAMESPACE}/hoarder:squashed ${NAMESPACE}/hoarder:${BRANCH//\//_};
